@@ -2,6 +2,10 @@
 const canvas = document.getElementById("glCanvas");
 const gl = canvas.getContext("webgl");
 
+canvas.width = window.innerWidth * window.devicePixelRatio;
+canvas.height = window.innerHeight * window.devicePixelRatio;
+gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
 if (!gl) {
     alert("WebGL не поддерживается вашим браузером!");
     throw new Error("WebGL не найден");
@@ -381,11 +385,12 @@ canvas.addEventListener("touchmove", (event) => {
         const dy = event.touches[0].clientY - event.touches[1].clientY;
         const distance = Math.sqrt(dx * dx + dy * dy);
         if (lastPinchDistance) {
-            zoom += (lastPinchDistance - distance) * 0.09;
+            zoom -= (initialPinchDistance - currentPinchDistance) * 0.09;
             zoom = Math.max(-100, Math.min(zoom, -3));
         }
         lastPinchDistance = distance;
     }
+    event.preventDefault(); // Предотвращаем стандартное поведение браузера
 });
 
 canvas.addEventListener("touchend", () => {
@@ -402,6 +407,7 @@ window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
 canvas.addEventListener("contextmenu", (event) => event.preventDefault());
+canvas.addEventListener("touchmove", (event) => event.preventDefault());
 
 // Текстуры для объектов
 const textures = {
