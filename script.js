@@ -371,8 +371,8 @@ canvas.addEventListener("touchmove", (event) => {
         const touch = event.touches[0];
         const deltaX = touch.clientX - touchStartX;
         const deltaY = touch.clientY - touchStartY;
-        rotationX += deltaY * 0.01;
-        rotationY += deltaX * 0.01;
+        rotationX += deltaY * 0.05;
+        rotationY += deltaX * 0.05;
         touchStartX = touch.clientX;
         touchStartY = touch.clientY;
     }
@@ -381,7 +381,7 @@ canvas.addEventListener("touchmove", (event) => {
         const dy = event.touches[0].clientY - event.touches[1].clientY;
         const distance = Math.sqrt(dx * dx + dy * dy);
         if (lastPinchDistance) {
-            zoom += (lastPinchDistance - distance) * 0.01;
+            zoom += (lastPinchDistance - distance) * 0.09;
             zoom = Math.max(-100, Math.min(zoom, -3));
         }
         lastPinchDistance = distance;
