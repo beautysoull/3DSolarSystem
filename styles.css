@@ -1,64 +1,64 @@
-/* Убираем стандартные отступы и делаем канвас на весь экран */
+/* Remove default padding and make canvas full screen */
 html, body {
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Убираем прокрутку */
-    height: 100%; /*Убедимся, что body занимает весь экран*/
+    overflow: hidden; /* Remove scrolling */
+    height: 100%; /* Make sure body takes up the entire screen */
 }
 
 canvas {
-    display: block; /* Убираем лишние пробелы */
-    width: 100vw; /* Полная ширина экрана */
-    height: 100vh; /* Полная высота экрана */
-    background-color: black; /* Фон канваса */
+    display: block; /* Remove extra spaces */
+    width: 100vw; /* Full screen width */
+    height: 100vh; /* Full screen height */
+    background-color: black; /* Canvas background */
 }
 
 #toggleButton {
     position: absolute;
-    top: 20px; /* Отступ сверху */
-    left: 20px; /* Отступ слева */
-    z-index: 10; /* Расположение поверх канваса */
-    padding: 10px 20px; /* Внутренние отступы кнопки */
-    font-size: 16px; /* Размер текста */
-    background-color: #f0f0f0; /* Цвет фона кнопки */
-    border: 1px solid #ccc; /* Цвет рамки кнопки */
-    border-radius: 5px; /* Закругление углов кнопки */
-    cursor: pointer; /* Указатель мыши при наведении */
-    opacity: 0.5; /* Прозрачность кнопки */
+    top: 20px; /* Top padding */
+    left: 20px; /* Left padding */
+    z-index: 10; /* Position above canvas */
+    padding: 10px 20px; /* Button padding */
+    font-size: 16px; /* Text size */
+    background-color: #f0f0f0; /* Button background color */
+    border: 1px solid #ccc; /* Button border color */
+    border-radius: 5px; /* Button corner rounding */
+    cursor: pointer; /* Mouse pointer on hover */
+    opacity: 0.3; /* Button opacity */
 }
 
 #toggleButton:hover {
-    opacity: 1; /* Полная непрозрачность при наведении */
+    opacity: 1; /* Full opacity on hover */
 }
 
-/* Стили для блока инструкций */
+/* Instruction block styles */
 #instructions {
     position: absolute;
-    bottom: 20px; /* Отступ от нижнего края */
-    left: 20px; /* Отступ от левого края */
-    z-index: 10; /* Расположение поверх канваса */
-    padding: 10px; /* Внутренние отступы блока */
-    font-size: 14px; /* Размер текста */
-    background-color: rgba(0, 0, 0, 0.7); /* Прозрачный чёрный фон */
-    color: white; /* Цвет текста */
-    border: 1px solid #444; /* Тонкая рамка вокруг блока */
-    border-radius: 5px; /* Закругление углов */
-    max-width: 300px; /* Ограничиваем ширину блока */
-    line-height: 1.5; /* Улучшаем читаемость текста */
-    pointer-events: none; /* Инструкции не блокируют клики */
+    bottom: 20px; /* Padding from the bottom edge */
+    left: 20px; /* Padding from the left edge */
+    z-index: 10; /* Placed on top of canvas */
+    padding: 10px; /* Inner padding of the block */
+    font-size: 14px; /* Text size */
+    background-color: rgba(0, 0, 0, 0.7); /* Transparent black background */
+    color: white; /* Text color */
+    border: 1px solid #444; /* Thin border around the block */
+    border-radius: 5px; /* Rounded corners */
+    max-width: 300px; /* Limit the width of the block */
+    line-height: 1.5; /* Improve the readability of the text */
+    pointer-events: none; /* nstructions do not block clicks */
 }
 
 #instructions h2 {
-    margin: 0 0 10px; /* Убираем отступы сверху и добавляем снизу */
-    font-size: 16px; /* Размер текста заголовка */
-    color: #00ff00; /* Акцентированный цвет заголовка */
+    margin: 0 0 10px; /* Remove padding from the top and add to the bottom */
+    font-size: 16px; /* Header text size */
+    color: #00ff00; /* Accented heading color */
 }
 
 #instructions p {
-    margin: 5px 0; /* Отступы между строками текста */
+    margin: 5px 0; /* Indents between lines of text */
 }
 
-/* Обычное состояние — инструкции для ПК видны */
+/* Normal state - desktop instructions are visible */
 #desktopInstructions {
     display: block;
 }
@@ -66,7 +66,7 @@ canvas {
     display: none;
 }
 
-/* На мобильных устройствах показываем мобильные инструкции */
+/* Show mobile instructions on mobile devices */
 @media (max-width: 768px) {
     #desktopInstructions {
         display: none;
