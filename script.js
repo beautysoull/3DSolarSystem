@@ -2,10 +2,6 @@
 const canvas = document.getElementById("glCanvas");
 const gl = canvas.getContext("webgl");
 
-canvas.width = window.innerWidth * window.devicePixelRatio;
-canvas.height = window.innerHeight * window.devicePixelRatio;
-gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
 if (!gl) {
     alert("WebGL не поддерживается вашим браузером!");
     throw new Error("WebGL не найден");
@@ -75,6 +71,35 @@ function loadShader(gl, type, source) {
     }
     return shader;
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Определение инструкции для мобильных или настольных устройств
+    function updateInstructions() {
+        // Проверяем, является ли устройство мобильным
+        const isMobile = /Mobi|Android/i.test(navigator.userAgent); 
+
+        // Получаем элементы инструкций
+        const desktopInstructions = document.getElementById("desktopInstructions");
+        const mobileInstructions = document.getElementById("mobileInstructions");
+
+        if (isMobile) {
+            // Скрываем инструкцию для компьютеров и показываем мобильные
+            desktopInstructions.style.display = "none";
+            mobileInstructions.style.display = "block";
+        } else {
+            // Скрываем инструкцию для мобильных и показываем для компьютеров
+            desktopInstructions.style.display = "block";
+            mobileInstructions.style.display = "none";
+        }
+    }
+
+    // Запускаем функцию при загрузке страницы
+    updateInstructions();
+
+    // Обновляем инструкции при изменении размера окна (например, при смене ориентации экрана на планшетах)
+    window.addEventListener("resize", updateInstructions);
+});
+
 
 // Проверка степени двойки
 function isPowerOf2(value) {
@@ -375,8 +400,8 @@ canvas.addEventListener("touchmove", (event) => {
         const touch = event.touches[0];
         const deltaX = touch.clientX - touchStartX;
         const deltaY = touch.clientY - touchStartY;
-        rotationX += deltaY * 0.05;
-        rotationY += deltaX * 0.05;
+        rotationX += deltaY * 0.01;
+        rotationY += deltaX * 0.01;
         touchStartX = touch.clientX;
         touchStartY = touch.clientY;
     }
@@ -385,12 +410,11 @@ canvas.addEventListener("touchmove", (event) => {
         const dy = event.touches[0].clientY - event.touches[1].clientY;
         const distance = Math.sqrt(dx * dx + dy * dy);
         if (lastPinchDistance) {
-            zoom -= (initialPinchDistance - currentPinchDistance) * 0.09;
+            zoom += (lastPinchDistance - distance) * 0.01;
             zoom = Math.max(-100, Math.min(zoom, -3));
         }
         lastPinchDistance = distance;
     }
-    event.preventDefault(); // Предотвращаем стандартное поведение браузера
 });
 
 canvas.addEventListener("touchend", () => {
@@ -407,7 +431,6 @@ window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
 canvas.addEventListener("contextmenu", (event) => event.preventDefault());
-canvas.addEventListener("touchmove", (event) => event.preventDefault());
 
 // Текстуры для объектов
 const textures = {
