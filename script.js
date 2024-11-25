@@ -72,6 +72,34 @@ function loadShader(gl, type, source) {
     return shader;
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    // Определение инструкции для мобильных или настольных устройств
+    function updateInstructions() {
+        // Проверяем, является ли устройство мобильным
+        const isMobile = /Mobi|Android/i.test(navigator.userAgent); 
+
+        // Получаем элементы инструкций
+        const desktopInstructions = document.getElementById("desktopInstructions");
+        const mobileInstructions = document.getElementById("mobileInstructions");
+
+        if (isMobile) {
+            // Скрываем инструкцию для компьютеров и показываем мобильные
+            desktopInstructions.style.display = "none";
+            mobileInstructions.style.display = "block";
+        } else {
+            // Скрываем инструкцию для мобильных и показываем для компьютеров
+            desktopInstructions.style.display = "block";
+            mobileInstructions.style.display = "none";
+        }
+    }
+
+    // Запускаем функцию при загрузке страницы
+    updateInstructions();
+
+    // Обновляем инструкции при изменении размера окна (например, при смене ориентации экрана на планшетах)
+    window.addEventListener("resize", updateInstructions);
+});
+
 // Проверка степени двойки
 function isPowerOf2(value) {
     return (value & (value - 1)) === 0;
@@ -405,7 +433,7 @@ canvas.addEventListener("touchend", () => {
         // Устанавливаем таймер перед включением вращения
         touchEndTimeout = setTimeout(() => {
             isTouchDragging = true;
-        }, 200); // Задержка в 200 мс
+        }, 1000); // Задержка в 200 мс
     }
     //lastPinchDistance = null;
 });
