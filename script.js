@@ -76,8 +76,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // Определение инструкции для мобильных или настольных устройств
     function updateInstructions() {
         // Проверяем, является ли устройство мобильным
-        const isMobile = /Mobi|Android/i.test(navigator.userAgent); 
-
+        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || 
+                         (navigator.maxTouchPoints && navigator.maxTouchPoints > 1);
         // Получаем элементы инструкций
         const desktopInstructions = document.getElementById("desktopInstructions");
         const mobileInstructions = document.getElementById("mobileInstructions");
