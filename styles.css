@@ -57,3 +57,21 @@ canvas {
 #instructions p {
     margin: 5px 0; /* Отступы между строками текста */
 }
+
+/* Обычное состояние — инструкции для ПК видны */
+#desktopInstructions {
+    display: block;
+}
+#mobileInstructions {
+    display: none;
+}
+
+/* На мобильных устройствах показываем мобильные инструкции */
+@media (max-width: 768px) {
+    #desktopInstructions {
+        display: none;
+    }
+    #mobileInstructions {
+        display: block;
+    }
+}
