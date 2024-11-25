@@ -72,34 +72,6 @@ function loadShader(gl, type, source) {
     return shader;
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    // Определение инструкции для мобильных или настольных устройств
-    function updateInstructions() {
-        // Проверяем, является ли устройство мобильным
-        const isMobile = /Mobi|Android/i.test(navigator.userAgent); 
-
-        // Получаем элементы инструкций
-        const desktopInstructions = document.getElementById("desktopInstructions");
-        const mobileInstructions = document.getElementById("mobileInstructions");
-
-        if (isMobile) {
-            // Скрываем инструкцию для компьютеров и показываем мобильные
-            desktopInstructions.style.display = "none";
-            mobileInstructions.style.display = "block";
-        } else {
-            // Скрываем инструкцию для мобильных и показываем для компьютеров
-            desktopInstructions.style.display = "block";
-            mobileInstructions.style.display = "none";
-        }
-    }
-
-    // Запускаем функцию при загрузке страницы
-    updateInstructions();
-
-    // Обновляем инструкции при изменении размера окна (например, при смене ориентации экрана на планшетах)
-    window.addEventListener("resize", updateInstructions);
-});
-
 // Проверка степени двойки
 function isPowerOf2(value) {
     return (value & (value - 1)) === 0;
@@ -417,8 +389,8 @@ canvas.addEventListener("touchmove", (event) => {
         const dy = event.touches[0].clientY - event.touches[1].clientY;
         const distance = Math.sqrt(dx * dx + dy * dy);
         if (lastPinchDistance) {
-            zoom += (lastPinchDistance - distance) * 0.01;
-            zoom = Math.max(-100, Math.min(zoom, -1));
+            zoom -= (lastPinchDistance - distance) * 0.01;
+            zoom = Math.max(-100, Math.min(zoom, -3));
         }
         lastPinchDistance = distance;
     }
