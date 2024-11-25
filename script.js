@@ -1,13 +1,13 @@
-// Инициализация WebGL
+// Initializing WebGL
 const canvas = document.getElementById("glCanvas");
 const gl = canvas.getContext("webgl");
 
 if (!gl) {
-    alert("WebGL не поддерживается вашим браузером!");
-    throw new Error("WebGL не найден");
+    alert("WebGL is not supported by your browser!");
+    throw new Error("WebGL not found");
 }
 
-// Шейдеры для орбит (белые линии)
+// Shaders for orbits (white lines)
 const vsSourceOrbit = `
     attribute vec4 aVertexPosition;
     uniform mat4 uModelViewMatrix;
@@ -19,11 +19,11 @@ const vsSourceOrbit = `
 
 const fsSourceOrbit = `
     void main(void) {
-        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); // Белый цвет для орбит
+        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); // White color for orbits
     }
 `;
 
-// Шейдеры для объектов
+// Shaders for objects
 const vsSource = `
     attribute vec4 aVertexPosition;
     attribute vec2 aTextureCoord;
@@ -44,7 +44,7 @@ const fsSource = `
     }
 `;
 
-// Создание шейдерной программы
+// Create a shader program
 function initShaderProgram(gl, vsSource, fsSource) {
     const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
     const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
@@ -53,19 +53,19 @@ function initShaderProgram(gl, vsSource, fsSource) {
     gl.attachShader(shaderProgram, fragmentShader);
     gl.linkProgram(shaderProgram);
     if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-        alert("Не удалось инициализировать шейдерную программу: " + gl.getProgramInfoLog(shaderProgram));
+        alert("Failed to initialize shader program: " + gl.getProgramInfoLog(shaderProgram));
         return null;
     }
     return shaderProgram;
 }
 
-// Загрузка шейдера
+// Loading shader
 function loadShader(gl, type, source) {
     const shader = gl.createShader(type);
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        alert("Ошибка при компиляции шейдера: " + gl.getShaderInfoLog(shader));
+        alert("Error compiling shader: " + gl.getShaderInfoLog(shader));
         gl.deleteShader(shader);
         return null;
     }
@@ -73,43 +73,43 @@ function loadShader(gl, type, source) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Определение инструкции для мобильных или настольных устройств
+    // Defining the instruction for mobile or desktop devices
     function updateInstructions() {
-        // Проверяем, является ли устройство мобильным
+        // Checking if the device is mobile
         const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || 
                          (navigator.maxTouchPoints && navigator.maxTouchPoints > 1);
-        // Получаем элементы инструкций
+        // Getting the instruction elements
         const desktopInstructions = document.getElementById("desktopInstructions");
         const mobileInstructions = document.getElementById("mobileInstructions");
 
         if (isMobile) {
-            // Скрываем инструкцию для компьютеров и показываем мобильные
+            // Hide instructions for computers and show mobile ones
             desktopInstructions.style.display = "none";
             mobileInstructions.style.display = "block";
         } else {
-            // Скрываем инструкцию для мобильных и показываем для компьютеров
+            // Hide the instruction for mobile and show it for computers
             desktopInstructions.style.display = "block";
             mobileInstructions.style.display = "none";
         }
     }
 
-    // Запускаем функцию при загрузке страницы
+    // Run the function when the page loads
     updateInstructions();
 
-    // Обновляем инструкции при изменении размера окна (например, при смене ориентации экрана на планшетах)
+    // We update the instructions when the window size changes (for example, when changing the screen orientation on tablets)
     window.addEventListener("resize", updateInstructions);
 });
 
-// Проверка степени двойки
+// Checking powers of two
 function isPowerOf2(value) {
     return (value & (value - 1)) === 0;
 }
 
-// Загрузка текстуры
+// Loading texture
 function loadTexture(gl, url) {
     const texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
-    const pixel = new Uint8Array([255, 255, 255, 255]);// Пустая текстура
+    const pixel = new Uint8Array([255, 255, 255, 255]);// Empty texture
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
 
     const image = new Image();
@@ -147,7 +147,7 @@ function loadTexture(gl, url) {
     return texture;
 }
 
-// Инициализация буферов для орбит
+// Initialize buffers for orbits
 function initOrbitBuffer(gl, radius, segments = 100) {
     const positions = [];
 
@@ -168,7 +168,7 @@ function initOrbitBuffer(gl, radius, segments = 100) {
     };
 }
 
-// Буферы для орбит
+// Orbital buffers
 const orbitBuffers = {
     mercury: initOrbitBuffer(gl, 5),
     venus: initOrbitBuffer(gl, 6.7),
@@ -180,7 +180,7 @@ const orbitBuffers = {
     neptune: initOrbitBuffer(gl, 30),
 };
 
-// Функция отрисовки орбиты
+// Orbit drawing function
 function renderOrbit(gl, programInfo, orbitBuffer, modelViewMatrix, projectionMatrix) {
     gl.useProgram(programInfo.program);
 
@@ -194,7 +194,7 @@ function renderOrbit(gl, programInfo, orbitBuffer, modelViewMatrix, projectionMa
     gl.drawArrays(gl.LINE_LOOP, 0, orbitBuffer.vertexCount);
 }
 
-// Инициализация буферов для сфер
+// Initializing buffers for spheres
 function initBuffers(gl, latBands, longBands, radius) {
     const positions = [];
     const textureCoordinates = [];
@@ -216,8 +216,6 @@ function initBuffers(gl, latBands, longBands, radius) {
 
             positions.push(radius * cosPhi * sinTheta, radius * cosTheta, radius * sinPhi * sinTheta);
             textureCoordinates.push(1 - long / longBands, 1 - lat / latBands);
-            //positions.push(radius * x, radius * y, radius * z);
-            //textureCoordinates.push(u, v);
         }
     }
     for (let lat = 0; lat < latBands; ++lat) {
@@ -252,7 +250,7 @@ function initIndexBuffer(gl, data) {
     return buffer;
 }
 
-// Функция для создания кольца
+// Function for creating a ring
 function initRingBuffers(gl, innerRadius, outerRadius, segments) {
     const positions = [];
     const textureCoordinates = [];
@@ -264,15 +262,14 @@ function initRingBuffers(gl, innerRadius, outerRadius, segments) {
         const sinAngle = Math.sin(angle);
         const cosAngle = Math.cos(angle);
 
-        // Внешний край кольца
+        // Outer edge of the ring
         positions.push(outerRadius * cosAngle, 0, outerRadius * sinAngle);
-        textureCoordinates.push(i / segments, 1); // Горизонтальное растяжение
+        textureCoordinates.push(i / segments, 1); // Horizontal stretching
 
-        // Внутренний край кольца
+        // Inner edge of the ring
         positions.push(innerRadius * cosAngle, 0, innerRadius * sinAngle);
-        textureCoordinates.push(i / segments, 0); // Горизонтальное растяжение
+        textureCoordinates.push(i / segments, 0); // Horizontal stretching
     }
-
     for (let i = 0; i < segments; ++i) {
         const first = i * 2;
         const second = first + 1;
@@ -282,7 +279,6 @@ function initRingBuffers(gl, innerRadius, outerRadius, segments) {
         indices.push(first, second, third);
         indices.push(second, fourth, third);
     }
-
     return {
         position: initBuffer(gl, positions, 3),
         textureCoord: initBuffer(gl, textureCoordinates, 2),
@@ -291,58 +287,58 @@ function initRingBuffers(gl, innerRadius, outerRadius, segments) {
     };
 }
 
-// Управление камерой
+// Camera control
 let cameraOffsetX = 0;
 let cameraOffsetY = 0;
 let cameraOffsetZ = 0;
 let zoom = -3;
 let rotationX = 0;
 let rotationY = 0;
-let isDragging = false; // Флаг для проверки, двигает ли пользователь камеру
-let offsetX = 0; // Смещение камеры по X
-let offsetY = 0; // Смещение камеры по Y
+let isDragging = false; // Flag to check if the user is moving the camera
+let offsetX = 0; // Camera X offset
+let offsetY = 0; // Y camera offset
 let lastX = 0, lastY = 0;
-let isPinching = false; // Флаг для жеста "пинч-зум"
-let isTouchDragging = false; // Флаг для одиночного касания
-let touchEndTimeout; // Таймер для предотвращения некорректного вращения
+let isPinching = false; // Flag for pinch-zoom gesture
+let isTouchDragging = false; // Flag for single touch
+let touchEndTimeout; // Timer to prevent incorrect rotation
 
-// Коэффициент чувствительности для движения камеры
+// Sensitivity coefficient for camera movement
 const moveSpeed = 0.5;
 canvas.addEventListener("wheel", (event) => {
     event.preventDefault();
 
-    // Получаем координаты мыши относительно канваса
+    // Get mouse coordinates relative to canvas
     const rect = canvas.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
 
-    // Пересчёт координат мыши в нормализованные координаты [-1, 1]
+    // Convert mouse coordinates to normalized coordinates [-1, 1]
     const normalizedMouseX = (mouseX / canvas.clientWidth) * 2 - 1;
     const normalizedMouseY = -((mouseY / canvas.clientHeight) * 2 - 1);
 
-    // Смещаем камеру в сторону мыши при зуме
+    // Move the camera towards the mouse when zooming
     offsetX += normalizedMouseX * (event.deltaY * 0.01);
     offsetY += normalizedMouseY * (event.deltaY * 0.01);
 
-    // Увеличение/уменьшение зума
+    // Increase/decrease zoom
     zoom -= event.deltaY * 0.01;
     zoom = Math.max(-1000, Math.min(-3, zoom));
 });
 
-// Добавление управления мышью
+// Add mouse control
 let dragging = false;
 
 
-// Функция остановки/запуска вращения
+// Function to stop/start rotation
 document.getElementById("toggleButton").addEventListener("click", () => {
     isPaused = !isPaused;
 
-    // Обновляем текст кнопки
+    // Update button text
     const button = document.getElementById("toggleButton");
     button.textContent = isPaused ? "Start" : "Stop";
 });
 
-// Обновляем зум
+// Update zoom
 canvas.addEventListener("wheel", (event) => {
     zoom -= event.deltaY * 0.01;
     zoom = Math.max(-80, Math.min(-3, zoom));
@@ -360,26 +356,26 @@ canvas.addEventListener("mousemove", (event) => {
         const deltaX = event.clientX - lastX;
         const deltaY = event.clientY - lastY;
 
-         // Если зажата левая кнопка мыши, двигаем камеру вверх/вниз и вперёд/назад
+         // If left mouse button is pressed, move camera up/down and forward/back
          if (event.buttons === 1) {
-            cameraOffsetX += deltaX * moveSpeed * 0.05; // Движение влево/вправо
-            cameraOffsetY -= deltaY * moveSpeed * 0.05; // Движение вверх/вниз
+            cameraOffsetX += deltaX * moveSpeed * 0.05; // Move left/right
+            cameraOffsetY -= deltaY * moveSpeed * 0.05; // Move up/down
         }
-        // Если зажата правая кнопка мыши, крутим по центру
+        // f right mouse button is pressed, rotate centered
         if (event.buttons === 2) {
             rotationX -= deltaY * 0.01
             rotationY += deltaX * 0.01; 
         }
-        // Обновляем смещение
-        offsetX += deltaX * 0.01; // Масштабируем движение
-        offsetY -= deltaY * 0.01; // Инвертируем Y для правильного движения
+        // Update offset
+        offsetX += deltaX * 0.01; // Scale movement
+        offsetY -= deltaY * 0.01; // Invert Y for correct movement
 
         lastX = event.clientX;
         lastY = event.clientY;
     }
 });
 
-// Сенсорные устройства
+// Sensory devices
 let touchStartX = 0, touchStartY = 0;
 let lastPinchDistance = null;
 
@@ -396,14 +392,14 @@ canvas.addEventListener("touchstart", (event) => {
         const dy = event.touches[0].clientY - event.touches[1].clientY;
         lastPinchDistance = Math.sqrt(dx * dx + dy * dy);
     }
-    clearTimeout(touchEndTimeout); // Очищаем таймер
+    clearTimeout(touchEndTimeout); // Clearing the timer
 });
 
 canvas.addEventListener("touchmove", (event) => {
     event.preventDefault();
     if (event.touches.length === 1) {
         const touch = event.touches[0];
-        // Перемещение одного пальца — вращение камеры
+        // Move one finger - rotate camera
         const deltaX = touch.clientX - touchStartX;
         const deltaY = touch.clientY - touchStartY;
         rotationX += deltaY * 0.03;
@@ -412,7 +408,7 @@ canvas.addEventListener("touchmove", (event) => {
         touchStartY = touch.clientY;
     }
     if (event.touches.length === 2) {
-        // Два пальца — жест масштабирования (пинч-зум)
+        // Two fingers - pinch zoom gesture
         const dx = event.touches[0].clientX - event.touches[1].clientX;
         const dy = event.touches[0].clientY - event.touches[1].clientY;
         const distance = Math.sqrt(dx * dx + dy * dy);
@@ -422,23 +418,22 @@ canvas.addEventListener("touchmove", (event) => {
         }
         lastPinchDistance = distance;
     }
-    event.preventDefault(); // Предотвращаем стандартное поведение браузера
+    event.preventDefault(); // Preventing default browser behavior
 });
 
 canvas.addEventListener("touchend", () => {
     if (event.touches.length === 0) {
-        isPinching = false; // Завершаем пинч-зум
+        isPinching = false; // Finishing the pinch zoom
         isTouchDragging = false;
 
-        // Устанавливаем таймер перед включением вращения
+        // Set the timer before turning on the rotation
         touchEndTimeout = setTimeout(() => {
             isTouchDragging = true;
-        }, 1000); // Задержка в 200 мс
+        }, 1000); 
     }
-    //lastPinchDistance = null;
 });
 
-// Автоматическое изменение размера холста
+// Automatic canvas resizing
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -449,7 +444,7 @@ resizeCanvas();
 
 canvas.addEventListener("contextmenu", (event) => event.preventDefault());
 
-// Текстуры для объектов
+// Textures for objects
 const textures = {
     sun: loadTexture(gl, "textures/sun.jpg"),
     earth: loadTexture(gl, "textures/earth.jpg"),
@@ -465,7 +460,7 @@ const textures = {
     neptune: loadTexture(gl, "textures/neptune.jpg"),
 };
 
-// Буферы для планет
+// Buffers for planets
 const buffers = {
     sun: initBuffers(gl, 30, 30, 3),
     earth: initBuffers(gl, 30, 30, 1),
@@ -475,13 +470,13 @@ const buffers = {
     mars: initBuffers(gl, 20, 20, 0.7),
     jupiter: initBuffers(gl, 30, 30, 2),
     saturn: initBuffers(gl, 30, 30, 1.8),
-    saturnRing: initRingBuffers(gl, 2.2, 3.5, 64), // Внутренний и внешний радиус кольца
+    saturnRing: initRingBuffers(gl, 2.2, 3.5, 64), // Inner and outer radius of the ring
     uranus: initBuffers(gl, 30, 30, 1.6),
     neptune: initBuffers(gl, 30, 30, 1.5),
     stars: initBuffers(gl, 30, 30, 100),
 };
 
-// Орбиты планет
+// Orbits of the planets
 const orbits = {
     mercury: { distance: 5, speed: 1.6, angle: 0 },
     venus: { distance: 6.7, speed: 1.2, angle: 0 },
@@ -494,7 +489,7 @@ const orbits = {
     moon: { distance: 2, speed: 2.5, angle: 0 },
 };
 
-// Функция отрисовки объекта
+// Object drawing function
 function renderObject(gl, programInfo, buffers, texture, modelViewMatrix, projectionMatrix) {
     gl.useProgram(programInfo.program);
 
@@ -526,7 +521,7 @@ let moonOrbit = 0;
 let rotationAngle = 0;
 let moonRotationAngle = 0;
 
-// Функция отрисовки сцены
+// Scene rendering function
 function drawScene(deltaTime) {
     gl.clearColor(0, 0, 0, 1);
     gl.clearDepth(1);
@@ -541,39 +536,39 @@ function drawScene(deltaTime) {
     mat4.translate(modelViewMatrix, modelViewMatrix, [cameraOffsetX, cameraOffsetY, zoom + cameraOffsetZ]);
     rotationAngle += deltaTime * 0.5;
 
-    mat4.rotate(modelViewMatrix, modelViewMatrix, Math.PI, [1, 0, 0]);// Поворот по X на 180 градусов, чтобы исправить "вверх ногами"
-    mat4.scale(modelViewMatrix, modelViewMatrix, [1, 1, -1]);// Инвертируем ось Z для устранения зеркальности
+    mat4.rotate(modelViewMatrix, modelViewMatrix, Math.PI, [1, 0, 0]);// Rotate X 180 degrees to fix "upside down"
+    mat4.scale(modelViewMatrix, modelViewMatrix, [1, 1, -1]);// Invert the Z axis to eliminate specularity
 
-    mat4.rotate(modelViewMatrix, modelViewMatrix, rotationX, [1, 0, 0]);// Вверх/вниз
-    mat4.rotate(modelViewMatrix, modelViewMatrix, rotationY, [0, 1, 0]);// Влево/вправо
+    mat4.rotate(modelViewMatrix, modelViewMatrix, rotationX, [1, 0, 0]);// Up/down
+    mat4.rotate(modelViewMatrix, modelViewMatrix, rotationY, [0, 1, 0]);// Left/right
 
-    // Звёздный фон
+    // Starry background
     const starsMatrix = mat4.clone(modelViewMatrix);
-    mat4.scale(starsMatrix, starsMatrix, [1, 1, -1]); // Инвертируем ось Z
+    mat4.scale(starsMatrix, starsMatrix, [1, 1, -1]); // Invert the Z axis
     renderObject(gl, programInfo, buffers.stars, textures.stars, starsMatrix, projectionMatrix);
     
-    // Рисуем орбиты
+    // Drawing orbits
     Object.keys(orbitBuffers).forEach((orbit) => {
         renderOrbit(gl, orbitProgramInfo, orbitBuffers[orbit], modelViewMatrix, projectionMatrix);
     });
 
-    // Земля
+    // Earth
     const earthMatrix = mat4.clone(modelViewMatrix);
-    earthRotation += deltaTime * 0.5; // Ожидаемое вращение Земли по оси Y
+    earthRotation += deltaTime * 0.5; // Expected rotation of the Earth around the Y axis
     mat4.rotate(earthMatrix, earthMatrix, orbits.earth.angle, [0, 1, 0]);
     mat4.translate(earthMatrix, earthMatrix, [orbits.earth.distance, 0, 0]);
     renderObject(gl, programInfo, buffers.earth, textures.earth, earthMatrix, projectionMatrix);
 
-    // Луна
+    // Moon
     const moonMatrix = mat4.clone(earthMatrix);
     mat4.rotate(moonMatrix, moonMatrix, orbits.moon.angle, [0, 1, 0]);
     mat4.translate(moonMatrix, moonMatrix, [orbits.moon.distance, 0, 0]);
     renderObject(gl, programInfo, buffers.moon, textures.moon, moonMatrix, projectionMatrix);
 
-    moonOrbit -= deltaTime * 0.2; // Луна вращается вокруг Земли
-    moonRotation += deltaTime * 1.0; // Луна вращается вокруг своей оси
+    moonOrbit -= deltaTime * 0.2; // The moon revolves around the earth
+    moonRotation += deltaTime * 1.0; // The moon rotates on its axis
 
-    // Остальные планеты и Солнце появляются при уменьшении масштаба
+    // The other planets and the Sun appear when zoomed out.
     if (zoom < -10) {
         const sunMatrix = mat4.clone(modelViewMatrix);
         renderObject(gl, programInfo, buffers.sun, textures.sun, sunMatrix, projectionMatrix);
@@ -587,7 +582,7 @@ function drawScene(deltaTime) {
             renderObject(gl, programInfo, buffers[planet], textures[planet], planetMatrix, projectionMatrix);
 
             if (planet === "saturn") {
-                // Отрисовка кольца
+                // Drawing a ring
                 const ringMatrix = mat4.clone(planetMatrix);
                 renderObject(gl, programInfo, buffers.saturnRing, textures.saturnRing, ringMatrix, projectionMatrix);
             }
@@ -595,7 +590,7 @@ function drawScene(deltaTime) {
     }
 }
 
-// Анимация
+// Animation
 let isPaused = false;
 let lastTime = 0;
 function animate(now) {
@@ -603,7 +598,7 @@ function animate(now) {
     const deltaTime = now - lastTime;
     lastTime = now;
 
-    // Если пауза, не обновляем углы вращения
+    // If there is a pause, we do not update the rotation angles
     if (!isPaused) {
         Object.keys(orbits).forEach((planet) => {
             orbits[planet].angle += deltaTime * orbits[planet].speed;
@@ -614,7 +609,7 @@ function animate(now) {
     
 }
 
-// Инициализация программ
+// Initialization of programs
 const orbitShaderProgram = initShaderProgram(gl, vsSourceOrbit, fsSourceOrbit);
 const orbitProgramInfo = {
     program: orbitShaderProgram,
@@ -626,7 +621,7 @@ const orbitProgramInfo = {
         modelViewMatrix: gl.getUniformLocation(orbitShaderProgram, "uModelViewMatrix"),
     },
 };
-// Инициализация программы
+
 const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
 const programInfo = {
     program: shaderProgram,
@@ -641,4 +636,4 @@ const programInfo = {
     },
 };
 
-requestAnimationFrame(animate);// Запуск анимации
+requestAnimationFrame(animate);// Starting animation
